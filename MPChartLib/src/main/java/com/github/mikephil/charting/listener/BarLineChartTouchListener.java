@@ -2,7 +2,6 @@ package com.github.mikephil.charting.listener;
 
 import android.annotation.SuppressLint;
 import android.graphics.Matrix;
-import android.graphics.PointF;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -11,6 +10,7 @@ import android.view.animation.AnimationUtils;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.data.BarLineScatterCandleBubbleData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
@@ -181,16 +181,16 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                     if (mChart.isScaleXEnabled() || mChart.isScaleYEnabled())
                         performZoom(event);
 
-                } else if (mTouchMode == NONE
+                } else if(mTouchMode == NONE
                         && Math.abs(distance(event.getX(), mTouchStartPoint.x, event.getY(),
-                        mTouchStartPoint.y)) > mDragTriggerDist) {
+                                             mTouchStartPoint.y)) > mDragTriggerDist){
 
-                    if (mChart.isDragEnabled()) {
+                    if(mChart.isDragEnabled()){
 
                         boolean shouldPan = !mChart.isFullyZoomedOut() ||
                                 !mChart.hasNoDragOffset();
 
-                        if (shouldPan) {
+                        if(shouldPan){
 
                             float distanceX = Math.abs(event.getX() - mTouchStartPoint.x);
                             float distanceY = Math.abs(event.getY() - mTouchStartPoint.y);
@@ -623,12 +623,15 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
             l.onChartSingleTapped(e);
         }
 
-        if (!mChart.isHighlightPerTapEnabled()) {
+        if(!mChart.isHighlightPerTapEnabled()){
             return false;
         }
 
         Highlight h = mChart.getHighlightByTouchPoint(e.getX(), e.getY());
         performHighlight(h, e);
+
+        LimitLine limitLine = mChart.getLimitLineByTouchPoint(e.getX(), e.getY());
+        performLimitLine(limitLine, e);
 
         return super.onSingleTapUp(e);
     }
@@ -671,7 +674,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         mDecelerationCurrentPoint.y += distanceY;
 
         MotionEvent event = MotionEvent.obtain(currentTime, currentTime, MotionEvent.ACTION_MOVE, mDecelerationCurrentPoint.x,
-                mDecelerationCurrentPoint.y, 0);
+                                               mDecelerationCurrentPoint.y, 0);
 
         float dragDistanceX = mChart.isDragXEnabled() ? mDecelerationCurrentPoint.x - mTouchStartPoint.x : 0.f;
         float dragDistanceY = mChart.isDragYEnabled() ? mDecelerationCurrentPoint.y - mTouchStartPoint.y : 0.f;

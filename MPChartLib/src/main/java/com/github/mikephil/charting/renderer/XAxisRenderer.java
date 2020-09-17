@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -158,16 +159,16 @@ public class XAxisRenderer extends AxisRenderer {
                 || mXAxis.getPosition() == XAxisPosition.TOP_INSIDE
                 || mXAxis.getPosition() == XAxisPosition.BOTH_SIDED) {
             c.drawLine(mViewPortHandler.contentLeft(),
-                    mViewPortHandler.contentTop(), mViewPortHandler.contentRight(),
-                    mViewPortHandler.contentTop(), mAxisLinePaint);
+                       mViewPortHandler.contentTop(), mViewPortHandler.contentRight(),
+                       mViewPortHandler.contentTop(), mAxisLinePaint);
         }
 
         if (mXAxis.getPosition() == XAxisPosition.BOTTOM
                 || mXAxis.getPosition() == XAxisPosition.BOTTOM_INSIDE
                 || mXAxis.getPosition() == XAxisPosition.BOTH_SIDED) {
             c.drawLine(mViewPortHandler.contentLeft(),
-                    mViewPortHandler.contentBottom(), mViewPortHandler.contentRight(),
-                    mViewPortHandler.contentBottom(), mAxisLinePaint);
+                       mViewPortHandler.contentBottom(), mViewPortHandler.contentRight(),
+                       mViewPortHandler.contentBottom(), mAxisLinePaint);
         }
     }
 
@@ -328,11 +329,11 @@ public class XAxisRenderer extends AxisRenderer {
             position[1] = 0.f;
 
             mTrans.pointValuesToPixel(position);
+            c.restoreToCount(clipRestoreCount);
 
             renderLimitLineLine(c, l, position);
+            renderLimitLineIcon(c, l, position);
             renderLimitLineLabel(c, l, position, 2.f + l.getYOffset());
-
-            c.restoreToCount(clipRestoreCount);
         }
     }
 
@@ -379,7 +380,7 @@ public class XAxisRenderer extends AxisRenderer {
                 final float labelLineHeight = Utils.calcTextHeight(mLimitLinePaint, label);
                 mLimitLinePaint.setTextAlign(Align.LEFT);
                 c.drawText(label, position[0] + xOffset, mViewPortHandler.contentTop() + yOffset + labelLineHeight,
-                        mLimitLinePaint);
+                           mLimitLinePaint);
             } else if (labelPosition == LimitLine.LimitLabelPosition.RIGHT_BOTTOM) {
 
                 mLimitLinePaint.setTextAlign(Align.LEFT);
@@ -389,12 +390,35 @@ public class XAxisRenderer extends AxisRenderer {
                 mLimitLinePaint.setTextAlign(Align.RIGHT);
                 final float labelLineHeight = Utils.calcTextHeight(mLimitLinePaint, label);
                 c.drawText(label, position[0] - xOffset, mViewPortHandler.contentTop() + yOffset + labelLineHeight,
-                        mLimitLinePaint);
-            } else {
+                           mLimitLinePaint);
+            } else{
 
                 mLimitLinePaint.setTextAlign(Align.RIGHT);
                 c.drawText(label, position[0] - xOffset, mViewPortHandler.contentBottom() - yOffset, mLimitLinePaint);
             }
+        }
+    }
+
+    public void renderLimitLineIcon(Canvas c, LimitLine limitLine, float[] position){
+        Drawable icon = limitLine.getIcon();
+
+        if(icon != null){
+            mLimitLineSegmentsBuffer[0] = position[0];
+            mLimitLineSegmentsBuffer[1] = mViewPortHandler.contentTop();
+            mLimitLineSegmentsBuffer[2] = position[0];
+            mLimitLineSegmentsBuffer[3] = mViewPortHandler.contentBottom();
+
+            float iconOffset = limitLine.getIconOffset();
+            int iconSize = limitLine.mIconSize;
+
+            Utils.drawImage(
+                    c,
+                    icon,
+                    (int) (mLimitLineSegmentsBuffer[0]),
+                    (int) (mLimitLineSegmentsBuffer[1] - iconOffset),
+                    iconSize,
+                    iconSize);
+
         }
     }
 }
