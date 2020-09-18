@@ -21,6 +21,7 @@ import com.github.mikephil.charting.data.BarLineScatterCandleBubbleData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.ChartHighlighter;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.highlight.limitline.LimitLineHighlighter;
 import com.github.mikephil.charting.interfaces.dataprovider.BarLineScatterCandleBubbleDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.IBarLineScatterCandleBubbleDataSet;
 import com.github.mikephil.charting.jobs.AnimatedMoveViewJob;
@@ -164,6 +165,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mXAxisRenderer = new XAxisRenderer(mViewPortHandler, mXAxis, mLeftAxisTransformer);
 
         setHighlighter(new ChartHighlighter(this));
+        setLimitLineHighlighter(new LimitLineHighlighter(this));
 
         mChartTouchListener = new BarLineChartTouchListener(this, mViewPortHandler.getMatrixTouch(), 3f);
 

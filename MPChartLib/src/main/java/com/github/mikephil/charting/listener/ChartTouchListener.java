@@ -5,6 +5,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.github.mikephil.charting.charts.Chart;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.highlight.Highlight;
 
 /**
@@ -39,6 +40,11 @@ public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDete
      * the last highlighted object (via touch)
      */
     protected Highlight mLastHighlighted;
+
+    /**
+     * The last selected limit line.
+     */
+    protected LimitLine mLastLimitLine;
 
     /**
      * the gesturedetector used for detecting taps and longpresses, ...
@@ -87,8 +93,12 @@ public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDete
      *
      * @param high
      */
-    public void setLastHighlighted(Highlight high) {
+    public void setLastHighlighted(Highlight high){
         mLastHighlighted = high;
+    }
+
+    public void setLastLimitLine(LimitLine limitLine){
+        mLastLimitLine = limitLine;
     }
 
     /**
@@ -96,7 +106,7 @@ public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDete
      *
      * @return
      */
-    public int getTouchMode() {
+    public int getTouchMode(){
         return mTouchMode;
     }
 
@@ -115,14 +125,24 @@ public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDete
      *
      * @param e
      */
-    protected void performHighlight(Highlight h, MotionEvent e) {
+    protected void performHighlight(Highlight h, MotionEvent e){
 
-        if (h == null || h.equalTo(mLastHighlighted)) {
+        if(h == null || h.equalTo(mLastHighlighted)){
             mChart.highlightValue(null, true);
             mLastHighlighted = null;
-        } else {
+        } else{
             mChart.highlightValue(h, true);
             mLastHighlighted = h;
+        }
+    }
+
+    protected void performLimitLine(LimitLine limitLine, MotionEvent e){
+        if(limitLine == null){
+            mChart.highlightValue(null, true);
+            mLastLimitLine = null;
+        } else{
+            mChart.highlightLimitLine(limitLine, true);
+            mLastLimitLine = limitLine;
         }
     }
 

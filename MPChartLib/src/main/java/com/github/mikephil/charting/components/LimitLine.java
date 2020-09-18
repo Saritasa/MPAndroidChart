@@ -4,7 +4,7 @@ package com.github.mikephil.charting.components;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
-import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 
 import com.github.mikephil.charting.utils.Utils;
 
@@ -32,24 +32,34 @@ public class LimitLine extends ComponentBase {
     /** label string that is drawn next to the limit line */
     private String mLabel = "";
 
-    /** the path effect of this LimitLine that makes dashed lines possible */
+    /**
+     * the path effect of this LimitLine that makes dashed lines possible
+     */
     private DashPathEffect mDashPathEffect = null;
 
-    /** indicates the position of the LimitLine label */
+    /**
+     * indicates the position of the LimitLine label
+     */
     private LimitLabelPosition mLabelPosition = LimitLabelPosition.RIGHT_TOP;
 
-    /** enum that indicates the position of the LimitLine label */
-    public enum LimitLabelPosition {
+    /**
+     * enum that indicates the position of the LimitLine label
+     */
+    public enum LimitLabelPosition{
         LEFT_TOP, LEFT_BOTTOM, RIGHT_TOP, RIGHT_BOTTOM
     }
 
+    public float mIconOffset = 0f;
+    public int mIconSize = 0;
+    private Drawable mIcon = null;
+
     /**
      * Constructor with limit.
-     * 
+     *
      * @param limit - the position (the value) on the y-axis (y-value) or x-axis
-     *            (xIndex) where this line should appear
+     * (xIndex) where this line should appear
      */
-    public LimitLine(float limit) {
+    public LimitLine(float limit){
         mLimit = limit;
     }
 
@@ -206,10 +216,34 @@ public class LimitLine extends ComponentBase {
 
     /**
      * Returns the label that is drawn next to the limit line.
-     * 
+     *
      * @return
      */
-    public String getLabel() {
+    public String getLabel(){
         return mLabel;
+    }
+
+    public float getIconOffset(){
+        return mIconOffset;
+    }
+
+    public void setIconOffset(final float aIconOffset){
+        mIconOffset = aIconOffset;
+    }
+
+    public int getIconSize(){
+        return mIconSize;
+    }
+
+    public void setIconSize(final int aIconSize){
+        mIconSize = aIconSize;
+    }
+
+    public Drawable getIcon(){
+        return mIcon;
+    }
+
+    public void setIcon(final Drawable aIcon){
+        mIcon = aIcon;
     }
 }

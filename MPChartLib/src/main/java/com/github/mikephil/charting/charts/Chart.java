@@ -13,10 +13,8 @@ import android.graphics.Paint.Align;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore.Images;
-import androidx.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -25,11 +23,11 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import com.github.mikephil.charting.animation.ChartAnimator;
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.animation.Easing.EasingFunction;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.IMarker;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.Entry;
@@ -38,10 +36,12 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.ChartHighlighter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.highlight.IHighlighter;
+import com.github.mikephil.charting.highlight.limitline.ILimitLineHighlighter;
 import com.github.mikephil.charting.interfaces.dataprovider.ChartInterface;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.OnChartLimitLineSelectedListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.renderer.DataRenderer;
 import com.github.mikephil.charting.renderer.LegendRenderer;
@@ -54,6 +54,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
+
+import androidx.annotation.RequiresApi;
 
 /**
  * Baseclass of all Chart-Views.
@@ -137,6 +140,8 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     protected OnChartValueSelectedListener mSelectionListener;
 
+    protected OnChartLimitLineSelectedListener mLimitLineListener;
+
     protected ChartTouchListener mChartTouchListener;
 
     /**
@@ -157,6 +162,8 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     protected DataRenderer mRenderer;
 
     protected IHighlighter mHighlighter;
+
+    protected ILimitLineHighlighter mLimitLineHighlighter;
 
     /**
      * object that manages the bounds and drawing constraints of the chart
@@ -452,6 +459,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * chart
      */
     protected Highlight[] mIndicesToHighlight;
+    protected LimitLine[] mLimitLines;
 
     /**
      * The maximum distance in dp away from an entry causing it to highlight.
@@ -509,10 +517,14 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      *
      * @return
      */
-    public boolean valuesToHighlight() {
+    public boolean valuesToHighlight(){
         return mIndicesToHighlight == null || mIndicesToHighlight.length <= 0
                 || mIndicesToHighlight[0] == null ? false
                 : true;
+    }
+
+    public boolean hasLimitLines(){
+        return mLimitLines != null && mLimitLines.length > 0 && mLimitLines[0] != null;
     }
 
     /**
@@ -520,9 +532,9 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      *
      * @param highs
      */
-    protected void setLastHighlighted(Highlight[] highs) {
+    protected void setLastHighlighted(Highlight[] highs){
 
-        if (highs == null || highs.length <= 0 || highs[0] == null) {
+        if(highs == null || highs.length <= 0 || highs[0] == null){
             mChartTouchListener.setLastHighlighted(null);
         } else {
             mChartTouchListener.setLastHighlighted(highs[0]);
@@ -645,11 +657,32 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
         if (callListener && mSelectionListener != null) {
 
-            if (!valuesToHighlight())
+            if(!valuesToHighlight()){
                 mSelectionListener.onNothingSelected();
-            else {
+            } else{
                 // notify the listener
                 mSelectionListener.onValueSelected(e, high);
+            }
+        }
+
+        // redraw the chart
+        invalidate();
+    }
+
+    public void highlightLimitLine(LimitLine limitLine, boolean callListener){
+        if(limitLine == null){
+            mLimitLines = null;
+        } else{
+            mLimitLines = new LimitLine[]{limitLine};
+        }
+
+        setLastLimitLines(mLimitLines);
+
+        if(callListener && mLimitLineListener != null){
+            if(hasLimitLines()){
+                mLimitLineListener.onValueSelected(limitLine);
+            } else{
+                mLimitLineListener.onNothingSelected();
             }
         }
 
@@ -666,13 +699,23 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * @param y
      * @return
      */
-    public Highlight getHighlightByTouchPoint(float x, float y) {
+    public Highlight getHighlightByTouchPoint(float x, float y){
 
-        if (mData == null) {
+        if(mData == null){
             Log.e(LOG_TAG, "Can't select by touch. No data set.");
             return null;
-        } else
+        } else{
             return getHighlighter().getHighlight(x, y);
+        }
+    }
+
+    public LimitLine getLimitLineByTouchPoint(float x, float y){
+        if(mXAxis.getLimitLines().isEmpty()){
+            Log.e(LOG_TAG, "Can't select by touch. No limit lines.");
+            return null;
+        } else{
+            return getLimitLineHighlighter().getHighlight(x, y);
+        }
     }
 
     /**
@@ -681,7 +724,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      *
      * @param l
      */
-    public void setOnTouchListener(ChartTouchListener l) {
+    public void setOnTouchListener(ChartTouchListener l){
         this.mChartTouchListener = l;
     }
 
@@ -1373,8 +1416,16 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      *
      * @return
      */
-    public T getData() {
+    public T getData(){
         return mData;
+    }
+
+    public List<LimitLine> getLimitLines(){
+        return getXAxis().getLimitLines();
+    }
+
+    public ViewPortHandler getViewPortHanl(){
+        return getViewPortHandler();
     }
 
     /**
@@ -1383,7 +1434,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      *
      * @return
      */
-    public ViewPortHandler getViewPortHandler() {
+    public ViewPortHandler getViewPortHandler(){
         return mViewPortHandler;
     }
 
@@ -1741,7 +1792,23 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      *
      * @param enabled
      */
-    public void setUnbindEnabled(boolean enabled) {
+    public void setUnbindEnabled(boolean enabled){
         this.mUnbind = enabled;
+    }
+
+    public ILimitLineHighlighter getLimitLineHighlighter(){
+        return mLimitLineHighlighter;
+    }
+
+    public void setLimitLineHighlighter(final ILimitLineHighlighter highlighter){
+        mLimitLineHighlighter = highlighter;
+    }
+
+    protected void setLastLimitLines(LimitLine[] limitLines){
+        if(limitLines == null || limitLines.length <= 0 || limitLines[0] == null){
+            mChartTouchListener.setLastLimitLine(null);
+        } else{
+            mChartTouchListener.setLastLimitLine(limitLines[0]);
+        }
     }
 }

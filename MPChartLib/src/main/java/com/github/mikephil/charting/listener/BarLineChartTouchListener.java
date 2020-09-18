@@ -2,7 +2,6 @@ package com.github.mikephil.charting.listener;
 
 import android.annotation.SuppressLint;
 import android.graphics.Matrix;
-import android.graphics.PointF;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -11,6 +10,7 @@ import android.view.animation.AnimationUtils;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.data.BarLineScatterCandleBubbleData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
@@ -612,16 +612,19 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
         OnChartGestureListener l = mChart.getOnChartGestureListener();
 
-        if (l != null) {
+        if(l != null){
             l.onChartSingleTapped(e);
         }
 
-        if (!mChart.isHighlightPerTapEnabled()) {
+        if(!mChart.isHighlightPerTapEnabled()){
             return false;
         }
 
         Highlight h = mChart.getHighlightByTouchPoint(e.getX(), e.getY());
         performHighlight(h, e);
+
+        LimitLine limitLine = mChart.getLimitLineByTouchPoint(e.getX(), e.getY());
+        performLimitLine(limitLine, e);
 
         return super.onSingleTapUp(e);
     }

@@ -1,16 +1,26 @@
 package com.github.mikephil.charting.interfaces.dataprovider;
 
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.YAxis.AxisDependency;
 import com.github.mikephil.charting.data.BarLineScatterCandleBubbleData;
 import com.github.mikephil.charting.utils.Transformer;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
-public interface BarLineScatterCandleBubbleDataProvider extends ChartInterface {
+import java.util.List;
 
-    Transformer getTransformer(AxisDependency axis);
-    boolean isInverted(AxisDependency axis);
-    
-    float getLowestVisibleX();
-    float getHighestVisibleX();
+public interface BarLineScatterCandleBubbleDataProvider extends ChartInterface{
 
     BarLineScatterCandleBubbleData getData();
+
+    Transformer getTransformer(AxisDependency axis);
+
+    boolean isInverted(AxisDependency axis);
+
+    float getLowestVisibleX();
+
+    float getHighestVisibleX();
+
+    List<LimitLine> getLimitLines();
+
+    ViewPortHandler getViewPortHanl();
 }
