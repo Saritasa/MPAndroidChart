@@ -143,6 +143,19 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
             llXAxis.setLabelPosition(LimitLabelPosition.RIGHT_BOTTOM);
             llXAxis.setTextSize(10f);
             llXAxis.setTypeface(tfRegular);
+            llXAxis.setIconSize(30);
+            llXAxis.setIcon(ContextCompat.getDrawable(this, R.drawable.test_icon_blue));
+            llXAxis.setIconSelected(ContextCompat.getDrawable(this, R.drawable.test_icon_red));
+
+            LimitLine llXAxis2 = new LimitLine(19f, "Index 10");
+            llXAxis2.setLineWidth(4f);
+            llXAxis2.enableDashedLine(10f, 10f, 0f);
+            llXAxis2.setLabelPosition(LimitLabelPosition.RIGHT_BOTTOM);
+            llXAxis2.setTextSize(10f);
+            llXAxis2.setTypeface(tfRegular);
+            llXAxis2.setIconSize(30);
+            llXAxis2.setIcon(ContextCompat.getDrawable(this, R.drawable.test_icon_blue));
+            llXAxis2.setIconSelected(ContextCompat.getDrawable(this, R.drawable.test_icon_red));
 
             LimitLine ll1 = new LimitLine(150f, "Upper Limit");
             ll1.setLineWidth(4f);
@@ -165,7 +178,8 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
             // add limit lines
             yAxis.addLimitLine(ll1);
             yAxis.addLimitLine(ll2);
-            //xAxis.addLimitLine(llXAxis);
+            xAxis.addLimitLine(llXAxis);
+            xAxis.addLimitLine(llXAxis2);
         }
 
         // add data

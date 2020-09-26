@@ -1013,6 +1013,13 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     }
 
     /**
+     * set a selection listener for the limit lines
+     */
+    public void setOnChartLimitLineSelectedListener(OnChartLimitLineSelectedListener l){
+        this.mLimitLineListener = l;
+    }
+
+    /**
      * Sets a gesture-listener for the chart for custom callbacks when executing
      * gestures on the chart surface.
      *
