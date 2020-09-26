@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="temperatureHigh">#FF3143</color>
+    <color name="temperatureMiddle">#F8C243</color>
+    <color name="temperatureLow">#00C573</color>
+</resources>
