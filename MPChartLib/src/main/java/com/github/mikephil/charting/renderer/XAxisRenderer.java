@@ -409,7 +409,7 @@ public class XAxisRenderer extends AxisRenderer {
             mLimitLineSegmentsBuffer[3] = mViewPortHandler.contentBottom();
 
             float iconOffset = limitLine.getIconOffset();
-            int iconSize = limitLine.mIconSize;
+            int iconSize = limitLine.getIconSize();
 
             Utils.drawImage(
                     c,
