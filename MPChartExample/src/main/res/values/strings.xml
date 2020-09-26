@@ -52,4 +52,9 @@
     <string name="scrollViewStart">START OF SCROLLVIEW</string>
     <string name="scrollViewEnd">END OF SCROLLVIEW</string>
 
+    <string name="fever_threshold_temperature_celsius">%.1f\u2103</string>
+    <string name="fever_threshold_temperature_fahrenheit">%.1f\u2109</string>
+    <string name="fever_threshold_temperature_current">%.1f\u00B0</string>
+    <string name="dashboard_chart_date_time_format">hh:mm aaa</string>
+    <string name="dashboard_chart_date_time_format_all">E hh:mm aaa</string>
 </resources>

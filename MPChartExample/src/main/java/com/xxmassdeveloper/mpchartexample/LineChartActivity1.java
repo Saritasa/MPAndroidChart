@@ -9,7 +9,6 @@ import android.graphics.DashPathEffect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,28 +37,34 @@ import com.github.mikephil.charting.utils.Utils;
 import com.xxmassdeveloper.mpchartexample.custom.MyMarkerView;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
+import org.joda.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.core.content.ContextCompat;
 
 /**
  * Example of a heavily customized {@link LineChart} with limit lines, custom line shapes, etc.
  *
- * @since 1.7.4
  * @version 3.1.0
+ * @since 1.7.4
  */
 public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListener,
-        OnChartValueSelectedListener {
+        OnChartValueSelectedListener{
 
     private LineChart chart;
     private SeekBar seekBarX, seekBarY;
     private TextView tvX, tvY;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                             WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_linechart);
+
+        initChart();
 
         setTitle("LineChartActivity1");
 
@@ -345,8 +350,8 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
 
                     LineDataSet set = (LineDataSet) iSet;
                     set.setMode(set.getMode() == LineDataSet.Mode.CUBIC_BEZIER
-                            ? LineDataSet.Mode.LINEAR
-                            :  LineDataSet.Mode.CUBIC_BEZIER);
+                                        ? LineDataSet.Mode.LINEAR
+                                        : LineDataSet.Mode.CUBIC_BEZIER);
                 }
                 chart.invalidate();
                 break;
@@ -359,8 +364,8 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
 
                     LineDataSet set = (LineDataSet) iSet;
                     set.setMode(set.getMode() == LineDataSet.Mode.STEPPED
-                            ? LineDataSet.Mode.LINEAR
-                            :  LineDataSet.Mode.STEPPED);
+                                        ? LineDataSet.Mode.LINEAR
+                                        : LineDataSet.Mode.STEPPED);
                 }
                 chart.invalidate();
                 break;
@@ -373,8 +378,8 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
 
                     LineDataSet set = (LineDataSet) iSet;
                     set.setMode(set.getMode() == LineDataSet.Mode.HORIZONTAL_BEZIER
-                            ? LineDataSet.Mode.LINEAR
-                            :  LineDataSet.Mode.HORIZONTAL_BEZIER);
+                                        ? LineDataSet.Mode.LINEAR
+                                        : LineDataSet.Mode.HORIZONTAL_BEZIER);
                 }
                 chart.invalidate();
                 break;
@@ -441,14 +446,24 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
     public void onStopTrackingTouch(SeekBar seekBar) {}
 
     @Override
-    public void onValueSelected(Entry e, Highlight h) {
+    public void onValueSelected(Entry e, Highlight h){
         Log.i("Entry selected", e.toString());
         Log.i("LOW HIGH", "low: " + chart.getLowestVisibleX() + ", high: " + chart.getHighestVisibleX());
         Log.i("MIN MAX", "xMin: " + chart.getXChartMin() + ", xMax: " + chart.getXChartMax() + ", yMin: " + chart.getYChartMin() + ", yMax: " + chart.getYChartMax());
     }
 
     @Override
-    public void onNothingSelected() {
+    public void onNothingSelected(){
         Log.i("Nothing selected", "Nothing selected.");
+    }
+
+    private void initChart(){
+        LocalDateTime now = LocalDateTime.now();
+        ArrayList<TemperatureData> list = new ArrayList<>();
+        list.add(new TemperatureData("", "", now.minusHours(2), 37.7f));
+        list.add(new TemperatureData("", "", now.minusHours(1), 36.7f));
+
+        TemperatureChartView chart = findViewById(R.id.chartSuper);
+        chart.init(ChartType.DAY, 40.0f, 35.6f, 38f, 37f, list, TemperatureType.Celsius);
     }
 }
