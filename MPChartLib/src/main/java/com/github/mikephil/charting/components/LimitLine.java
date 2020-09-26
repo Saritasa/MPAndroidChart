@@ -8,6 +8,9 @@ import android.graphics.drawable.Drawable;
 
 import com.github.mikephil.charting.utils.Utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The limit line is an additional feature for all Line-, Bar- and
  * ScatterCharts. It allows the displaying of an additional line in the chart
@@ -54,6 +57,7 @@ public class LimitLine extends ComponentBase {
     private Drawable mIcon = null;
     private Drawable mIconSelected = null;
     private boolean isSelected = false;
+    private List<Long> eventIds = new ArrayList<>();
 
     /**
      * Constructor with limit.
@@ -263,5 +267,13 @@ public class LimitLine extends ComponentBase {
 
     public void setSelected(final boolean aSelected){
         isSelected = aSelected;
+    }
+
+    public List<Long> getEventIds(){
+        return eventIds;
+    }
+
+    public void setEventIds(final List<Long> aEventIds){
+        eventIds = aEventIds;
     }
 }
