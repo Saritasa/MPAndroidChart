@@ -313,27 +313,28 @@ public class XAxisRenderer extends AxisRenderer {
         position[0] = 0;
         position[1] = 0;
 
-        for (int i = 0; i < limitLines.size(); i++) {
+        for(int i = 0; i < limitLines.size(); i++){
 
             LimitLine l = limitLines.get(i);
 
-            if (!l.isEnabled())
+            if(!l.isEnabled()){
                 continue;
+            }
 
             int clipRestoreCount = c.save();
             mLimitLineClippingRect.set(mViewPortHandler.getContentRect());
-            mLimitLineClippingRect.inset(-l.getLineWidth(), 0.f);
+            mLimitLineClippingRect.inset(-l.getIconSize() / 2f, -999.f);
             c.clipRect(mLimitLineClippingRect);
 
             position[0] = l.getLimit();
             position[1] = 0.f;
 
             mTrans.pointValuesToPixel(position);
-            c.restoreToCount(clipRestoreCount);
 
             renderLimitLineLine(c, l, position);
             renderLimitLineIcon(c, l, position);
             renderLimitLineLabel(c, l, position, 2.f + l.getYOffset());
+            c.restoreToCount(clipRestoreCount);
         }
     }
 
