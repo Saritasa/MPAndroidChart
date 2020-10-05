@@ -623,7 +623,13 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         Highlight h = mChart.getHighlightByTouchPoint(e.getX(), e.getY());
         performHighlight(h, e);
 
+        for(LimitLine limitLine : mChart.getLimitLines()){
+            limitLine.setSelected(false);
+        }
         LimitLine limitLine = mChart.getLimitLineByTouchPoint(e.getX(), e.getY());
+        if(limitLine != null){
+            limitLine.setSelected(true);
+        }
         performLimitLine(limitLine, e);
 
         return super.onSingleTapUp(e);

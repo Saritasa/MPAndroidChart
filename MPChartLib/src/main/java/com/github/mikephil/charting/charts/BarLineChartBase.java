@@ -14,6 +14,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.components.YAxis.AxisDependency;
@@ -1633,13 +1634,22 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         //Superclass transforms chart.
         super.onSizeChanged(w, h, oldw, oldh);
 
-        if (mKeepPositionOnRotation) {
+        if(mKeepPositionOnRotation){
 
             //Restoring old position of chart.
             getTransformer(AxisDependency.LEFT).pointValuesToPixel(mOnSizeChangedBuffer);
             mViewPortHandler.centerViewPort(mOnSizeChangedBuffer, this);
-        } else {
+        } else{
             mViewPortHandler.refresh(mViewPortHandler.getMatrixTouch(), this, true);
+        }
+    }
+
+    public void deselectLimitLines(){
+        if(mLimitLines != null){
+            for(LimitLine limitLine : mLimitLines){
+                limitLine.setSelected(false);
+            }
+            invalidate();
         }
     }
 }

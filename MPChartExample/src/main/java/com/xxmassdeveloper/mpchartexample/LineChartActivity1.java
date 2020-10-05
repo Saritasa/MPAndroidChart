@@ -439,6 +439,7 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
+        chart.deselectLimitLines();
         tvX.setText(String.valueOf(seekBarX.getProgress()));
         tvY.setText(String.valueOf(seekBarY.getProgress()));
 

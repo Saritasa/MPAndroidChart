@@ -392,7 +392,6 @@ public class XAxisRenderer extends AxisRenderer {
                 c.drawText(label, position[0] - xOffset, mViewPortHandler.contentTop() + yOffset + labelLineHeight,
                            mLimitLinePaint);
             } else{
-
                 mLimitLinePaint.setTextAlign(Align.RIGHT);
                 c.drawText(label, position[0] - xOffset, mViewPortHandler.contentBottom() - yOffset, mLimitLinePaint);
             }
@@ -400,7 +399,12 @@ public class XAxisRenderer extends AxisRenderer {
     }
 
     public void renderLimitLineIcon(Canvas c, LimitLine limitLine, float[] position){
-        Drawable icon = limitLine.getIcon();
+        Drawable icon;
+        if(limitLine.isSelected()){
+            icon = limitLine.getIconSelected();
+        } else{
+            icon = limitLine.getIcon();
+        }
 
         if(icon != null){
             mLimitLineSegmentsBuffer[0] = position[0];
