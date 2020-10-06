@@ -33,6 +33,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.listener.XAxisListener;
 import com.github.mikephil.charting.utils.Utils;
 import com.xxmassdeveloper.mpchartexample.custom.MyMarkerView;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
@@ -115,7 +116,13 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
         XAxis xAxis;
         {   // // X-Axis Style // //
             xAxis = chart.getXAxis();
+            xAxis.mXAxisListener = new XAxisListener(){
 
+                @Override
+                public void onScroll(final float min, final float max){
+                    Log.d("TESTING", "TESTING " + min + " " + max);
+                }
+            };
             // vertical grid lines
             xAxis.enableGridDashedLine(10f, 10f, 0f);
         }

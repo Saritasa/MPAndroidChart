@@ -54,7 +54,7 @@ public class XAxisRenderer extends AxisRenderer {
 
                 min = (float) p2.x;
                 max = (float) p1.x;
-            } else {
+            } else{
 
                 min = (float) p1.x;
                 max = (float) p2.x;
@@ -64,6 +64,9 @@ public class XAxisRenderer extends AxisRenderer {
             MPPointD.recycleInstance(p2);
         }
 
+        if(mXAxis.mXAxisListener != null){
+            mXAxis.mXAxisListener.onScroll(min, max);
+        }
         computeAxisValues(min, max);
     }
 

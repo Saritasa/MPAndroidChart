@@ -1,6 +1,7 @@
 
 package com.github.mikephil.charting.components;
 
+import com.github.mikephil.charting.listener.XAxisListener;
 import com.github.mikephil.charting.utils.Utils;
 
 /**
@@ -10,7 +11,9 @@ import com.github.mikephil.charting.utils.Utils;
  *
  * @author Philipp Jahoda
  */
-public class XAxis extends AxisBase {
+public class XAxis extends AxisBase{
+
+    public XAxisListener mXAxisListener;
 
     /**
      * width of the x-axis labels in pixels - this is automatically
