@@ -1677,12 +1677,13 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * @param job
      */
     public void addViewportJob(Runnable job) {
-
-        if (mViewPortHandler.hasChartDimens()) {
-            post(job);
-        } else {
-            mJobs.add(job);
-        }
+        // Hack to immediate scroll
+        post(job);
+//        if (mViewPortHandler.hasChartDimens()) {
+//            post(job);
+//        } else {
+//            mJobs.add(job);
+//        }
     }
 
     /**
