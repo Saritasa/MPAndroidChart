@@ -743,9 +743,17 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      * @param scaleX
      * @param scaleY
      */
-    public void setScaleMinima(float scaleX, float scaleY) {
+    public void setScaleMinima(float scaleX, float scaleY){
         mViewPortHandler.setMinimumScaleX(scaleX);
         mViewPortHandler.setMinimumScaleY(scaleY);
+    }
+
+    /**
+     * Sets the maximum scale factor value to which can be zoomed in.
+     */
+    public void setScaleMaximum(float scaleX, float scaleY){
+        mViewPortHandler.setMaximumScaleX(scaleX);
+        mViewPortHandler.setMaximumScaleY(scaleY);
     }
 
     /**
@@ -756,7 +764,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      *
      * @param maxXRange The maximum visible range of x-values.
      */
-    public void setVisibleXRangeMaximum(float maxXRange) {
+    public void setVisibleXRangeMaximum(float maxXRange){
         float xScale = mXAxis.mAxisRange / (maxXRange);
         mViewPortHandler.setMinimumScaleX(xScale);
     }

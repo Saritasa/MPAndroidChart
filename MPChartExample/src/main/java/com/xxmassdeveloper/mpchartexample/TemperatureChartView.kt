@@ -115,6 +115,7 @@ class TemperatureChartView @JvmOverloads constructor(context: Context, attrs: At
         lineChart.isScaleXEnabled = false
         lineChart.isScaleYEnabled = false
         lineChart.setScaleMinima(SCALE_MINIMA_X, SCALE_MINIMA_Y)
+        lineChart.setScaleMaximum(SCALE_MINIMA_X, SCALE_MINIMA_Y)
         lineChart.setMaxVisibleValueCount(temperatureData.size * VALUE_COUNT_MULTIPLIER)
 
         Utils.init(context)
